@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { mensagemErro } from '../utils/erros'
 
 const AuthContext = createContext(null)
 
@@ -22,17 +23,17 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    if (error) throw new Error(mensagemErro(error))
   }
 
   async function signUp(email, password) {
     const { error } = await supabase.auth.signUp({ email, password })
-    if (error) throw error
+    if (error) throw new Error(mensagemErro(error))
   }
 
   async function signOut() {
     const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    if (error) throw new Error(mensagemErro(error))
   }
 
   const value = {

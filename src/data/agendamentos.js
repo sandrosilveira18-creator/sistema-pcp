@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient'
+import { mensagemErro } from '../utils/erros'
 
 // Todos os agendamentos de um dia (YYYY-MM-DD), ordenados por horário.
 export async function listarAgendamentosDoDia(data) {
@@ -7,7 +8,7 @@ export async function listarAgendamentosDoDia(data) {
     .select('*')
     .eq('data', data)
     .order('hora', { ascending: true })
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(mensagemErro(error))
   return rows
 }
 
@@ -22,7 +23,7 @@ export async function criarAgendamento({ servico, ...payload }) {
     duracao_min: servico?.duracao_min ?? payload.duracao_min ?? 30,
   }
   const { data, error } = await supabase.from('agendamentos').insert(registro).select().single()
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(mensagemErro(error))
   return data
 }
 
@@ -33,7 +34,7 @@ export async function atualizarAgendamento(id, payload) {
     .eq('id', id)
     .select()
     .single()
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(mensagemErro(error))
   return data
 }
 
@@ -47,5 +48,5 @@ export async function marcarLembreteEnviado(id) {
 
 export async function excluirAgendamento(id) {
   const { error } = await supabase.from('agendamentos').delete().eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) throw new Error(mensagemErro(error))
 }

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { normalizarTelefoneBR, mensagemLembrete, linkWhatsApp } from '../src/utils/whatsapp'
 import { resumoFinanceiro } from '../src/utils/financeiro'
 import { somarDias, isoDeData, formatarHora, formatarDataCurta } from '../src/utils/format'
+import { mensagemErro } from '../src/utils/erros'
 
 describe('normalizarTelefoneBR', () => {
   it('adiciona DDI 55 a celular com DDD', () => {
@@ -83,6 +84,29 @@ describe('resumoFinanceiro', () => {
   it('não quebra com lista vazia', () => {
     const r = resumoFinanceiro([])
     expect(r).toEqual({ total: 0, quantidadeAtendidos: 0, faltas: 0, ticketMedio: 0, porServico: [] })
+  })
+})
+
+describe('mensagemErro', () => {
+  it('traduz conflito de horário (código 23505)', () => {
+    expect(mensagemErro({ code: '23505', message: 'duplicate key value violates unique constraint "uidx_agendamentos_slot"' }))
+      .toBe('Já tem um cliente marcado nesse horário. Escolha outro horário.')
+  })
+  it('traduz violação de regra (código 23514)', () => {
+    expect(mensagemErro({ code: '23514', message: 'violates check constraint' }))
+      .toBe('Dados inválidos. Confira os campos e tente de novo.')
+  })
+  it('traduz login inválido', () => {
+    expect(mensagemErro({ message: 'Invalid login credentials' })).toBe('E-mail ou senha incorretos.')
+  })
+  it('traduz e-mail já cadastrado', () => {
+    expect(mensagemErro({ message: 'User already registered' })).toBe('Esse e-mail já tem conta. É só entrar.')
+  })
+  it('traduz falta de conexão', () => {
+    expect(mensagemErro({ message: 'Failed to fetch' })).toBe('Sem conexão. Verifique a internet e tente de novo.')
+  })
+  it('mantém a mensagem original quando não conhece o erro', () => {
+    expect(mensagemErro({ message: 'algo específico' })).toBe('algo específico')
   })
 })
 
