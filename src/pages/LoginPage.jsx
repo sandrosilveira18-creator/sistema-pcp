@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [mensagem, setMensagem] = useState('')
   const [carregando, setCarregando] = useState(false)
 
-  if (session) return <Navigate to="/produtos" replace />
+  if (session) return <Navigate to="/agenda" replace />
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -22,10 +22,10 @@ export default function LoginPage() {
     try {
       if (modo === 'entrar') {
         await signIn(email, senha)
-        navigate('/produtos')
+        navigate('/agenda')
       } else {
         await signUp(email, senha)
-        setMensagem('Cadastro realizado. Verifique seu e-mail para confirmar a conta (se a confirmação estiver ativada) e depois faça login.')
+        setMensagem('Conta criada! Se a confirmação de e-mail estiver ativa, confirme pelo link enviado e depois entre.')
         setModo('entrar')
       }
     } catch (err) {
@@ -38,8 +38,11 @@ export default function LoginPage() {
   return (
     <div className="login-shell">
       <div className="card login-card">
-        <h1>Ficha Técnica</h1>
-        <p>Precificação automática para food service</p>
+        <div className="marca">
+          <span className="marca__poste" aria-hidden="true">💈</span>
+          <h1>Alemão do Corte</h1>
+          <p>Agenda e caixa na palma da mão</p>
+        </div>
 
         {erro && <div className="alerta alerta-erro">{erro}</div>}
         {mensagem && <div className="alerta alerta-info">{mensagem}</div>}
@@ -54,6 +57,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
+              inputMode="email"
             />
           </div>
           <div className="campo">
@@ -68,7 +72,7 @@ export default function LoginPage() {
               autoComplete={modo === 'entrar' ? 'current-password' : 'new-password'}
             />
           </div>
-          <button className="btn" type="submit" disabled={carregando} style={{ width: '100%' }}>
+          <button className="btn btn-bloco" type="submit" disabled={carregando}>
             {carregando ? 'Aguarde…' : modo === 'entrar' ? 'Entrar' : 'Criar conta'}
           </button>
         </form>
@@ -76,7 +80,7 @@ export default function LoginPage() {
         <div className="toggle-form">
           {modo === 'entrar' ? (
             <>
-              Ainda não tem conta?{' '}
+              Primeira vez?{' '}
               <button type="button" onClick={() => { setModo('cadastrar'); setErro(''); setMensagem('') }}>
                 Criar conta
               </button>

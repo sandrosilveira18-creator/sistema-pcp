@@ -1,38 +1,30 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { NavLink, Outlet } from 'react-router-dom'
+
+const ITENS = [
+  { to: '/agenda', label: 'Agenda', icone: '📅' },
+  { to: '/financeiro', label: 'Caixa', icone: '💰' },
+  { to: '/servicos', label: 'Serviços', icone: '✂️' },
+  { to: '/perfil', label: 'Perfil', icone: '👤' },
+]
 
 export default function Layout() {
-  const { user, signOut } = useAuth()
-  const navigate = useNavigate()
-
-  async function handleSignOut() {
-    await signOut()
-    navigate('/login')
-  }
-
   return (
     <div className="app-shell">
-      <aside className="app-nav">
-        <div className="app-nav__marca">Ficha Técnica</div>
-        <nav>
-          <NavLink to="/produtos" className={({ isActive }) => (isActive ? 'nav-link ativo' : 'nav-link')}>
-            Produtos
-          </NavLink>
-          <NavLink to="/insumos" className={({ isActive }) => (isActive ? 'nav-link ativo' : 'nav-link')}>
-            Insumos
-          </NavLink>
-          <NavLink to="/configuracoes" className={({ isActive }) => (isActive ? 'nav-link ativo' : 'nav-link')}>
-            Configurações
-          </NavLink>
-        </nav>
-        <div className="app-nav__rodape">
-          <span className="app-nav__usuario" title={user?.email}>{user?.email}</span>
-          <button className="btn btn-secundario" onClick={handleSignOut}>Sair</button>
-        </div>
-      </aside>
       <main className="app-conteudo">
         <Outlet />
       </main>
+      <nav className="tabbar">
+        {ITENS.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) => (isActive ? 'tab ativo' : 'tab')}
+          >
+            <span className="tab__icone" aria-hidden="true">{item.icone}</span>
+            <span className="tab__label">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }

@@ -2,11 +2,26 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ficha Técnica &amp; Precificação</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#f6f5f3" />
+    <meta name="description" content="Agenda e caixa da barbearia Alemão do Corte, direto do celular." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Alemão do Corte" />
+    <link rel="apple-touch-icon" href="/icon-180.png" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <title>Alemão do Corte</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {})
+        })
+      }
+    </script>
   </body>
 </html>

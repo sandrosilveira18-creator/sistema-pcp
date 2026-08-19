@@ -2,10 +2,10 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import LoginPage from './pages/LoginPage.jsx'
-import InsumosPage from './pages/InsumosPage.jsx'
-import ProdutosPage from './pages/ProdutosPage.jsx'
-import ProdutoFichaPage from './pages/ProdutoFichaPage.jsx'
-import ConfiguracoesPage from './pages/ConfiguracoesPage.jsx'
+import AgendaPage from './pages/AgendaPage.jsx'
+import ServicosPage from './pages/ServicosPage.jsx'
+import FinanceiroPage from './pages/FinanceiroPage.jsx'
+import PerfilPage from './pages/PerfilPage.jsx'
 
 export default function App() {
   return (
@@ -19,11 +19,11 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/produtos" replace />} />
-        <Route path="produtos" element={<ProdutosPage />} />
-        <Route path="produtos/:id" element={<ProdutoFichaPage />} />
-        <Route path="insumos" element={<InsumosPage />} />
-        <Route path="configuracoes" element={<ConfiguracoesPage />} />
+        <Route index element={<Navigate to="/agenda" replace />} />
+        <Route path="agenda" element={<AgendaPage />} />
+        <Route path="servicos" element={<ServicosPage />} />
+        <Route path="financeiro" element={<FinanceiroPage />} />
+        <Route path="perfil" element={<PerfilPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

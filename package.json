@@ -1,5 +1,5 @@
 {
-  "name": "sistema-ficha-tecnica-precificacao",
+  "name": "barbearia-alemao-do-corte",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "icones": "node scripts/gera-icones.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
