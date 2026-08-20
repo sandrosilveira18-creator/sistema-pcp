@@ -266,3 +266,49 @@ h2 { font-size: 1.15rem; margin: 0; letter-spacing: -.01em; }
 .autocomplete li:active, .autocomplete li:hover { background: var(--bg-elev2); }
 .autocomplete small { color: var(--texto-fraco); }
 .cliente-vinculado { color: var(--verde); font-size: .78rem; }
+
+/* ---------- Filtro (chips) ---------- */
+.filtro-chips { display: flex; gap: 8px; margin-bottom: 14px; }
+.chip {
+  background: var(--bg-elev); border: 1px solid var(--linha); color: var(--texto-fraco);
+  border-radius: 999px; padding: 7px 14px; font-size: .85rem; font-weight: 500;
+}
+.chip.ativo { background: var(--primario); color: #fff; border-color: var(--primario); }
+
+.badge-assinante {
+  display: inline-block; margin-left: 8px; font-size: .68rem; font-weight: 700;
+  color: var(--acento-forte); background: var(--acento-suave); border-radius: 999px; padding: 1px 8px;
+  vertical-align: middle;
+}
+
+/* ---------- Assinatura na ficha ---------- */
+.assinatura-box { border-top: 1px solid var(--linha); margin-top: 18px; padding-top: 6px; }
+.assinatura-form { margin-top: 4px; }
+
+.uso-mes {
+  background: var(--acento-suave); border: 1px solid var(--linha); border-radius: 12px;
+  padding: 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.uso-mes__topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: .9rem; font-weight: 600; }
+.uso-mes__contagem { color: var(--acento-forte); white-space: nowrap; }
+.uso-barra { height: 8px; background: var(--bg-elev2); border-radius: 999px; overflow: hidden; }
+.uso-barra__fill { height: 100%; background: var(--acento); border-radius: 999px; transition: width .3s; }
+.uso-mes__restam { font-size: .82rem; color: var(--texto-fraco); }
+
+.dependentes { margin-bottom: 12px; }
+.dependentes__titulo { font-size: .82rem; color: var(--texto-fraco); font-weight: 600; }
+.lista-dep { list-style: none; margin: 6px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.lista-dep li {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg-elev2); border-radius: 8px; padding: 8px 10px; font-size: .9rem;
+}
+.lista-dep .acao { width: 30px; height: 30px; font-size: .85rem; }
+.add-dep { display: flex; gap: 8px; margin-top: 6px; }
+.add-dep input {
+  flex: 1; background: var(--bg-elev); border: 1px solid var(--linha); color: var(--texto);
+  border-radius: 10px; padding: 10px; font-size: .95rem;
+}
+.add-dep .btn { white-space: nowrap; padding: 10px 14px; }
+
+.assinatura-acoes { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.link-editar { background: none; border: none; color: var(--acento-forte); font-size: .85rem; padding: 4px 0; }
