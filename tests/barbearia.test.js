@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { normalizarTelefoneBR, mensagemLembrete, linkWhatsApp } from '../src/utils/whatsapp'
 import { resumoFinanceiro } from '../src/utils/financeiro'
-import { somarDias, isoDeData, formatarHora, formatarDataCurta } from '../src/utils/format'
+import { somarDias, isoDeData, formatarHora, formatarDataCurta, tempoDesde, diasEntre } from '../src/utils/format'
 import { mensagemErro } from '../src/utils/erros'
 
 describe('normalizarTelefoneBR', () => {
@@ -123,5 +123,27 @@ describe('datas locais', () => {
   })
   it('formatarDataCurta vira DD/MM', () => {
     expect(formatarDataCurta('2026-08-20')).toBe('20/08')
+  })
+})
+
+describe('tempoDesde (última visita)', () => {
+  const hoje = '2026-08-20'
+  it('mesmo dia é "hoje"', () => {
+    expect(tempoDesde('2026-08-20', hoje)).toBe('hoje')
+  })
+  it('um dia atrás é "ontem"', () => {
+    expect(tempoDesde('2026-08-19', hoje)).toBe('ontem')
+  })
+  it('poucos dias', () => {
+    expect(tempoDesde('2026-08-15', hoje)).toBe('há 5 dias')
+  })
+  it('meses', () => {
+    expect(tempoDesde('2026-06-20', hoje)).toBe('há 2 meses')
+  })
+  it('sem visita', () => {
+    expect(tempoDesde(null, hoje)).toBe('nunca veio')
+  })
+  it('diasEntre conta certo com virada de mês', () => {
+    expect(diasEntre('2026-08-19', '2026-09-01')).toBe(13)
   })
 })

@@ -2,6 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 
 const ITENS = [
   { to: '/agenda', label: 'Agenda', icone: '📅' },
+  { to: '/clientes', label: 'Clientes', icone: '🧑' },
   { to: '/financeiro', label: 'Caixa', icone: '💰' },
   { to: '/servicos', label: 'Serviços', icone: '✂️' },
   { to: '/perfil', label: 'Perfil', icone: '👤' },

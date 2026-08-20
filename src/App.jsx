@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import AgendaPage from './pages/AgendaPage.jsx'
 import ServicosPage from './pages/ServicosPage.jsx'
 import FinanceiroPage from './pages/FinanceiroPage.jsx'
+import ClientesPage from './pages/ClientesPage.jsx'
 import PerfilPage from './pages/PerfilPage.jsx'
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
       >
         <Route index element={<Navigate to="/agenda" replace />} />
         <Route path="agenda" element={<AgendaPage />} />
+        <Route path="clientes" element={<ClientesPage />} />
         <Route path="servicos" element={<ServicosPage />} />
         <Route path="financeiro" element={<FinanceiroPage />} />
         <Route path="perfil" element={<PerfilPage />} />

@@ -207,3 +207,62 @@ h2 { font-size: 1.15rem; margin: 0; letter-spacing: -.01em; }
 .link-ig { display: inline-block; color: var(--acento-forte); text-decoration: none; margin: -4px 0 16px; font-weight: 600; }
 .conta { border-top: 1px solid var(--linha); padding-top: 18px; display: flex; flex-direction: column; gap: 12px; }
 .conta__email { color: var(--texto-fraco); font-size: .9rem; text-align: center; }
+
+/* ---------- Resumo do dia (contador no topo da Agenda) ---------- */
+.resumo-dia {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--acento-suave); color: var(--acento-forte);
+  border: 1px solid var(--linha); border-radius: 12px; padding: 8px 12px;
+  font-size: .9rem; margin-bottom: 14px;
+}
+.resumo-dia strong { color: var(--texto); }
+.resumo-dia__sep { opacity: .5; }
+
+/* ---------- Busca ---------- */
+.busca-input {
+  width: 100%; background: var(--bg-elev); border: 1px solid var(--linha); color: var(--texto);
+  border-radius: 12px; padding: 12px; font-size: 1rem; margin-bottom: 14px;
+}
+.busca-input:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px var(--acento-suave); }
+
+/* ---------- Lista de clientes ---------- */
+.lista-clientes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.cartao-cli {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--bg-elev); border: 1px solid var(--linha); border-radius: var(--raio);
+  padding: 14px; box-shadow: var(--sombra); cursor: pointer;
+}
+.cartao-cli__info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.cartao-cli__nome { font-weight: 600; }
+.cartao-cli__meta { color: var(--texto-fraco); font-size: .82rem; }
+.cartao-cli__gasto { font-weight: 700; color: var(--acento-forte); white-space: nowrap; }
+
+/* ---------- Histórico (ficha) ---------- */
+.historico { border-top: 1px solid var(--linha); margin-top: 18px; padding-top: 6px; }
+.lista-historico { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.lista-historico li {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center;
+  font-size: .88rem; padding: 8px 0; border-bottom: 1px solid var(--linha);
+}
+.lh__data { color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+.lh__serv { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lh__status { font-weight: 600; text-align: right; }
+.lh__atendido { color: var(--verde); }
+.lh__faltou { color: var(--vermelho); }
+.lh__cancelado, .lh__agendado { color: var(--texto-fraco); font-weight: 500; }
+.link-excluir { background: none; border: none; color: var(--vermelho); font-size: .85rem; padding: 4px 0; }
+
+/* ---------- Autocomplete de cliente ---------- */
+.campo-autocomplete { position: relative; }
+.autocomplete {
+  list-style: none; margin: 4px 0 0; padding: 4px; position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--bg-elev); border: 1px solid var(--linha); border-radius: 10px;
+  box-shadow: var(--sombra-forte); z-index: 40; max-height: 200px; overflow-y: auto;
+}
+.autocomplete li {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  padding: 10px; border-radius: 8px; cursor: pointer;
+}
+.autocomplete li:active, .autocomplete li:hover { background: var(--bg-elev2); }
+.autocomplete small { color: var(--texto-fraco); }
+.cliente-vinculado { color: var(--verde); font-size: .78rem; }

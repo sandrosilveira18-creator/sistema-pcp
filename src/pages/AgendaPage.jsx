@@ -8,6 +8,7 @@ import {
 } from '../data/agendamentos'
 import { listarServicos } from '../data/servicos'
 import { buscarPerfil } from '../data/perfil'
+import { buscarClientesRapido, criarCliente } from '../data/clientes'
 import {
   formatarBRL,
   formatarHora,
@@ -59,11 +60,13 @@ export default function AgendaPage() {
     return p?.id ?? null
   }, [agendamentos])
 
-  const totalPrevisto = useMemo(
-    () => agendamentos
-      .filter((a) => a.status !== 'cancelado')
-      .reduce((s, a) => s + Number(a.preco || 0), 0),
+  const ativos = useMemo(
+    () => agendamentos.filter((a) => a.status !== 'cancelado'),
     [agendamentos],
+  )
+  const totalPrevisto = useMemo(
+    () => ativos.reduce((s, a) => s + Number(a.preco || 0), 0),
+    [ativos],
   )
 
   async function mudarStatus(ag, status) {
@@ -113,6 +116,14 @@ export default function AgendaPage() {
       </header>
 
       {erro && <div className="alerta alerta-erro">{erro}</div>}
+
+      {!carregando && ativos.length > 0 && (
+        <div className="resumo-dia">
+          <span><strong>{ativos.length}</strong> {ativos.length === 1 ? 'cliente' : 'clientes'}</span>
+          <span className="resumo-dia__sep">·</span>
+          <span><strong>{formatarBRL(totalPrevisto)}</strong> previsto</span>
+        </div>
+      )}
 
       {carregando ? (
         <div className="vazio">Carregando…</div>
@@ -165,12 +176,6 @@ export default function AgendaPage() {
         </ul>
       )}
 
-      {agendamentos.length > 0 && (
-        <div className="rodape-previsto">
-          Previsto no dia: <strong>{formatarBRL(totalPrevisto)}</strong>
-        </div>
-      )}
-
       <button className="fab" onClick={() => setModalAberto(true)}>+ Novo</button>
 
       {modalAberto && (
@@ -189,18 +194,52 @@ export default function AgendaPage() {
 function NovoAgendamentoModal({ diaPadrao, servicos, onFechar, onSalvo, onErro }) {
   const [clienteNome, setClienteNome] = useState('')
   const [clienteTelefone, setClienteTelefone] = useState('')
+  const [clienteId, setClienteId] = useState(null) // vínculo com um cliente existente
+  const [sugestoes, setSugestoes] = useState([])
   const [servicoId, setServicoId] = useState(servicos[0]?.id ?? '')
   const [data, setData] = useState(diaPadrao)
   const [hora, setHora] = useState('09:00')
   const [observacao, setObservacao] = useState('')
   const [salvando, setSalvando] = useState(false)
 
+  // Autocomplete: busca clientes já cadastrados enquanto digita o nome.
+  useEffect(() => {
+    if (clienteId) return // já selecionou um cliente, não sugere
+    const termo = clienteNome
+    const t = setTimeout(() => {
+      buscarClientesRapido(termo).then(setSugestoes).catch(() => setSugestoes([]))
+    }, 250)
+    return () => clearTimeout(t)
+  }, [clienteNome, clienteId])
+
+  function selecionarCliente(c) {
+    setClienteId(c.id)
+    setClienteNome(c.nome)
+    if (c.telefone) setClienteTelefone(c.telefone)
+    setSugestoes([])
+  }
+
   async function salvar(e) {
     e.preventDefault()
     setSalvando(true)
     try {
       const servico = servicos.find((s) => s.id === servicoId) || null
+      // Vincula a um cliente: usa o selecionado, senão cria a ficha na hora
+      // (assim o histórico do cliente vai sendo montado sozinho).
+      let idCliente = clienteId
+      if (!idCliente && clienteNome.trim()) {
+        try {
+          const novo = await criarCliente({
+            nome: clienteNome.trim(),
+            telefone: clienteTelefone.trim() || null,
+          })
+          idCliente = novo.id
+        } catch {
+          idCliente = null // não bloqueia o agendamento se a ficha falhar
+        }
+      }
       await criarAgendamento({
+        cliente_id: idCliente || undefined,
         cliente_nome: clienteNome.trim(),
         cliente_telefone: clienteTelefone.trim() || null,
         servico,
@@ -221,9 +260,27 @@ function NovoAgendamentoModal({ diaPadrao, servicos, onFechar, onSalvo, onErro }
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>Novo agendamento</h2>
         <form onSubmit={salvar}>
-          <div className="campo">
+          <div className="campo campo-autocomplete">
             <label htmlFor="cliente">Cliente</label>
-            <input id="cliente" required value={clienteNome} onChange={(e) => setClienteNome(e.target.value)} autoFocus />
+            <input
+              id="cliente"
+              required
+              autoComplete="off"
+              value={clienteNome}
+              onChange={(e) => { setClienteId(null); setClienteNome(e.target.value) }}
+              autoFocus
+            />
+            {sugestoes.length > 0 && (
+              <ul className="autocomplete">
+                {sugestoes.map((c) => (
+                  <li key={c.id} onClick={() => selecionarCliente(c)}>
+                    <span>{c.nome}</span>
+                    {c.telefone && <small>{c.telefone}</small>}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {clienteId && <small className="cliente-vinculado">✓ cliente já cadastrado</small>}
           </div>
           <div className="campo">
             <label htmlFor="tel">WhatsApp (opcional)</label>

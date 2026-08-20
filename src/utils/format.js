@@ -48,3 +48,24 @@ export function somarDias(iso, dias) {
   d.setDate(d.getDate() + dias)
   return isoDeData(d)
 }
+
+// Diferença de dias inteiros entre duas datas ISO (b - a), no fuso local.
+export function diasEntre(isoA, isoB) {
+  const MS = 86400000
+  return Math.round((dataDeISO(isoB) - dataDeISO(isoA)) / MS)
+}
+
+// Texto amigável de "quando foi a última visita" a partir de 'YYYY-MM-DD'.
+// Ex.: 'hoje', 'ontem', 'há 5 dias', 'há 3 meses'. Sem visita -> 'nunca veio'.
+export function tempoDesde(iso, hoje = hojeISO()) {
+  if (!iso) return 'nunca veio'
+  const dias = diasEntre(iso, hoje)
+  if (dias <= 0) return 'hoje'
+  if (dias === 1) return 'ontem'
+  if (dias < 30) return `há ${dias} dias`
+  const meses = Math.floor(dias / 30)
+  if (meses === 1) return 'há 1 mês'
+  if (meses < 12) return `há ${meses} meses`
+  const anos = Math.floor(dias / 365)
+  return anos === 1 ? 'há 1 ano' : `há ${anos} anos`
+}
