@@ -280,6 +280,11 @@ h2 { font-size: 1.15rem; margin: 0; letter-spacing: -.01em; }
   color: var(--acento-forte); background: var(--acento-suave); border-radius: 999px; padding: 1px 8px;
   vertical-align: middle;
 }
+.badge-dependente {
+  display: inline-block; margin-left: 8px; font-size: .68rem; font-weight: 700;
+  color: #3f6b52; background: #e7f1ea; border-radius: 999px; padding: 1px 8px;
+  vertical-align: middle;
+}
 
 /* ---------- Assinatura na ficha ---------- */
 .assinatura-box { border-top: 1px solid var(--linha); margin-top: 18px; padding-top: 6px; }

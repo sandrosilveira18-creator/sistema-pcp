@@ -86,13 +86,22 @@ export async function removerDependente(dependenteId) {
   if (error) throw new Error(mensagemErro(error))
 }
 
-// Conjunto de cliente_ids que são titulares de alguma assinatura ativa —
-// usado para marcar "Assinante" na lista de clientes.
-export async function idsTitularesAtivos() {
-  const { data, error } = await supabase
-    .from('assinaturas')
-    .select('cliente_id')
-    .neq('status', 'cancelada')
-  if (error) throw new Error(mensagemErro(error))
-  return new Set((data || []).map((a) => a.cliente_id))
+// Conjuntos de cliente_ids ligados a assinaturas ativas, separados por papel:
+// - titulares: quem tem a assinatura no próprio nome
+// - dependentes: quem está incluído na assinatura de outra pessoa
+// Usado para marcar os selos ("Assinante" / "Dependente") na lista de clientes.
+export async function idsAssinantes() {
+  const [titRes, depRes] = await Promise.all([
+    supabase.from('assinaturas').select('cliente_id').neq('status', 'cancelada'),
+    supabase
+      .from('assinatura_dependentes')
+      .select('cliente_id, assinaturas!inner(status)')
+      .neq('assinaturas.status', 'cancelada'),
+  ])
+  if (titRes.error) throw new Error(mensagemErro(titRes.error))
+  if (depRes.error) throw new Error(mensagemErro(depRes.error))
+  return {
+    titulares: new Set((titRes.data || []).map((a) => a.cliente_id)),
+    dependentes: new Set((depRes.data || []).map((d) => d.cliente_id)),
+  }
 }

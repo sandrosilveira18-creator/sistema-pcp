@@ -13,7 +13,7 @@ import {
   cancelarAssinatura,
   adicionarDependente,
   removerDependente,
-  idsTitularesAtivos,
+  idsAssinantes,
 } from '../data/assinaturas'
 import { formatarBRL, formatarDataCurta, formatarHora, tempoDesde } from '../utils/format'
 import { linkWhatsApp } from '../utils/whatsapp'
@@ -23,6 +23,7 @@ const VAZIO = { nome: '', telefone: '', aniversario: '', observacoes: '' }
 export default function ClientesPage() {
   const [clientes, setClientes] = useState([])
   const [titulares, setTitulares] = useState(new Set())
+  const [dependentes, setDependentes] = useState(new Set())
   const [busca, setBusca] = useState('')
   const [soAssinantes, setSoAssinantes] = useState(false)
   const [carregando, setCarregando] = useState(true)
@@ -35,10 +36,11 @@ export default function ClientesPage() {
     try {
       const [lista, ids] = await Promise.all([
         listarClientes({ busca: busca.trim() || undefined }),
-        idsTitularesAtivos().catch(() => new Set()),
+        idsAssinantes().catch(() => ({ titulares: new Set(), dependentes: new Set() })),
       ])
       setClientes(lista)
-      setTitulares(ids)
+      setTitulares(ids.titulares)
+      setDependentes(ids.dependentes)
     } catch (err) {
       setErro(err.message)
     } finally {
@@ -51,7 +53,9 @@ export default function ClientesPage() {
     return () => clearTimeout(t)
   }, [carregar])
 
-  const visiveis = soAssinantes ? clientes.filter((c) => titulares.has(c.id)) : clientes
+  const visiveis = soAssinantes
+    ? clientes.filter((c) => titulares.has(c.id) || dependentes.has(c.id))
+    : clientes
 
   return (
     <div className="pagina">
@@ -88,6 +92,9 @@ export default function ClientesPage() {
                 <span className="cartao-cli__nome">
                   {c.nome}
                   {titulares.has(c.id) && <span className="badge-assinante">⭐ Assinante</span>}
+                  {!titulares.has(c.id) && dependentes.has(c.id) && (
+                    <span className="badge-dependente">👥 Dependente</span>
+                  )}
                 </span>
                 <span className="cartao-cli__meta">
                   {(c.resumo?.visitas ?? 0)} visita{(c.resumo?.visitas ?? 0) === 1 ? '' : 's'}
